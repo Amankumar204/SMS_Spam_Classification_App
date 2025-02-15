@@ -1,0 +1,29 @@
+import streamlit as st
+import joblib
+
+# Load trained model and vectorizer
+model = joblib.load("spam_classifier.pkl")
+vectorizer = joblib.load("vectorizer.pkl")
+
+# Streamlit UI
+st.title("Spam Message Classifier 🚀")
+st.write("Enter a message below to check if it's **Spam** or **Ham**.")
+
+# User input
+user_input = st.text_area("Enter your message here...", "")
+
+if st.button("Classify"):
+    if user_input.strip():
+        # Transform input text
+        input_vectorized = vectorizer.transform([user_input])
+        
+        # Predict
+        prediction = model.predict(input_vectorized)[0]
+        
+        # Display result
+        if prediction == 1:
+            st.error("🚨 This message is **Spam!**")
+        else:
+            st.success("✅ This message is **Ham (Not Spam).**")
+    else:
+        st.warning("⚠️ Please enter a message to classify.")
